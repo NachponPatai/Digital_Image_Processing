@@ -1,0 +1,13 @@
+im = imread('images\WormHole_1H.tif');
+Grayim = rgb2gray(im);
+bw1 = imbinarize(Grayim,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
+canny = edge(bw1,'sobel');
+se90 = strel('line', 3, 90);
+se0 = strel('line', 3, 0);
+BWsdil = imdilate(canny, [se90 se0]);
+seD = strel('diamond',1);
+BWnobord = imclearborder(BWsdil, 4);
+BWfinal = imerode(BWnobord,seD);
+imshow(im);
+[centers, radii] = imfindcircles(BWfinal,[5 14]);
+viscircles(centers, radii,'Color','b');
